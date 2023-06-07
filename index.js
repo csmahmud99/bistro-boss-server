@@ -31,14 +31,19 @@ async function run() {
         const cartCollection = client.db("bistroDb").collection("carts");
 
         // Users related APIs
+        app.get("/users", async (req, res) => {
+            const result = await userCollection.find().toArray();
+            res.send(result);
+        });
+
         app.post("/users", async (req, res) => {
             const user = req.body;
             // console.log(user);
             const query = { email: user.email };
             const existingUser = await userCollection.findOne(query);
             // console.log("Existing User:", existingUser);
-            if(existingUser){
-                return res.send({message: "User already exists"});
+            if (existingUser) {
+                return res.send({ message: "User already exists" });
             }
             const result = await userCollection.insertOne(user);
             res.send(result);
